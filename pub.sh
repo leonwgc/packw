@@ -9,11 +9,22 @@ else
 fi
 
   # publish
-  # git push origin refs/tags/v"$ver"
-  git tag -d v"$ver"
-  git push origin :v"$ver"
-  git tag v"$ver"
-  git push origin v"$ver"
+ git tag "$ver"
 
-  npm publish
+if [ $? != 0]; then
+	echo "$ver exists" 
+	exit 1
+else
+	echo "tag $ver created"
 fi
+
+ git push origin "$ver"
+
+ if [ $? != 0]; then
+	echo "failed to push tag $ver" 
+	exit 1
+else
+	echo "tag $ver pushed to remote"
+fi
+
+npm publish
