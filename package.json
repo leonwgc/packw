@@ -5,7 +5,9 @@
   "bin": {
     "packx": "./bin/cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "pub":"bash pub.sh"
+  },
   "tags": [
     "react",
     "webpack",
