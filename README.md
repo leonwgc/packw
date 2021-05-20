@@ -2,6 +2,17 @@
 
 基于 webpack 开发/打包工具
 
+#### 特性
+1. 基于webpack5
+2. 支持less,sass (sass为dart-sass)
+3. 支持spa/mpa开发和构建
+4. 支持typescript 
+5. 支持自定义html模板和自动生成html入口
+6. 支持react hmr
+7. 构建支持自定义publicPath
+8. 开发支持自定义端口号
+9. 支持自定义postcss, 比如px2rem, px2viewport
+
 #### 用法
 
 - 开发 packx start dir/file [-p port]
@@ -36,7 +47,7 @@
 
 运行 packx start page1
 
-#####  如果项目不包含index.html ，默认会生成index.html， 如果包含，则不会生成， 可以自定义html结构
+##### 入口html, 如果项目不包含index.html ，默认会生成index.html,可以自定义html结构
 
 ```js
 <!DOCTYPE html>
@@ -57,4 +68,33 @@
   </body>
 </html>
 
+```
+
+#### 扩展postcss插件
+项目根目录添加 postcss.config.js， 以添加px2viewport 为例
+
+```js
+module.exports = (ctx) => {
+  if (!/node_modules/.test(ctx.file)) {
+    ctx.options.plugins.push([
+      require('postcss-px-to-viewport'),
+      {
+        unitToConvert: 'px',
+        viewportWidth: 375,
+        unitPrecision: 5,
+        propList: ['*'],
+        viewportUnit: 'vw',
+        fontViewportUnit: 'vw',
+        selectorBlackList: ['ignore'],
+        minPixelValue: 1,
+        mediaQuery: false,
+        replace: true,
+        exclude: [/node_modules/],
+        include: undefined,
+        landscape: false,
+        landscapeUnit: 'vw',
+      },
+    ]);
+  }
+};
 ```
