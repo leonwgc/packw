@@ -1,12 +1,12 @@
 {
   "name": "packx",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "cli tool for react mpa/spa app",
   "bin": {
     "packx": "./bin/cli.js"
   },
   "scripts": {
-    "pub": "bash pub.sh"
+    "pub": "nrm use npm && bash pub.sh"
   },
   "tags": [
     "react",
