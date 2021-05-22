@@ -18,7 +18,7 @@
 
 - 开发 packx start dir/file [-p port]
 - 构建 packx build dir/file [-p publicPath]
-- 自定义开发/构建 packx start [--build 构建输出],配置packx.config.js
+- 自定义packx run [--build 构建输出],配置packx.config.js
 
 
 #### 入口在 ./src目录下,比如./src/index.jsx
