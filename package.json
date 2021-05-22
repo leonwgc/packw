@@ -1,12 +1,12 @@
 {
   "name": "packx",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "cli tool for react mpa/spa app",
   "bin": {
     "packx": "./bin/cli.js"
   },
   "scripts": {
-    "pub": "nrm use npm && bash pub.sh"
+    "pub": "bash pub.sh"
   },
   "tags": [
     "react",
@@ -63,6 +63,7 @@
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3",
     "webpack-node-externals": "^3.0.0",
     "webpackbar": "^4.0.0",
     "yargs": "^17.0.1"

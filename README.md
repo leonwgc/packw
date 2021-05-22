@@ -1,6 +1,6 @@
 ### packx
 
-基于 webpack 开发/打包工具
+基于 webpack5 开发/打包工具
 
 #### 特性
 1. 基于webpack5
@@ -12,11 +12,13 @@
 7. 构建支持自定义publicPath
 8. 开发支持自定义端口号
 9. 支持自定义postcss, 比如px2rem, px2viewport
+10. 通过packx.config.js 自定义配置
 
 #### 用法
 
 - 开发 packx start dir/file [-p port]
 - 构建 packx build dir/file [-p publicPath]
+- 自定义开发/构建 packx start [--build 构建输出],配置packx.config.js
 
 
 #### 入口在 ./src目录下,比如./src/index.jsx
@@ -98,3 +100,27 @@ module.exports = (ctx) => {
   }
 };
 ```
+#### 通过packx.config.js 自定义配置
+注意，除了entry限制为object外， 配置项和webpack 配置一致
+下面通过自定义配置packx.config.js 实现了mpa项目的打包
+
+```js
+const path = require('path');
+
+module.exports = {
+  entry: {
+    h5: './src/h5/index',
+    pc: './src/pc/index',
+  },
+  output: {
+    path: path.resolve(__dirname, './dist/packx-demo'),
+    publicPath: '',
+  },
+};
+
+```
+项目结构和打包输出如下图
+
+![structure.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27201daa7a384f368d5f37060d846c07~tplv-k3u1fbpfcp-watermark.image)
+
+项目代码参考 [https://github.com/leonwgc/packx-demo](https://github.com/leonwgc/packx-demo)
