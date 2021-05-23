@@ -148,6 +148,10 @@ const getAssetConfig = (type: string) => {
 
 //#region html webpack
 const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
+  // index.html tpl check & emit
+  if (!fs.existsSync(getProjectPath('./index.html'))) {
+    fs.writeFileSync(getProjectPath('./index.html'), tpl);
+  }
   const htmlsPlugins = [];
 
   for (let dir of dirs) {
@@ -378,11 +382,6 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
     isDir = false;
   }
   const entryFile = s[0];
-
-  // index.html tpl check & emit
-  if (!fs.existsSync(getProjectPath('./index.html'))) {
-    fs.writeFileSync(getProjectPath('./index.html'), tpl);
-  }
 
   const config = getConfig(isDev, { [dir]: entryFile }, publicPath);
 
