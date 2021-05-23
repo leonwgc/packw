@@ -1,3 +1,4 @@
+export default `
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head>
@@ -14,4 +15,4 @@
   <body style="font-size: 14px">
     <div id="root"></div>
   </body>
-</html>
+</html>`;
