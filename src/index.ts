@@ -24,7 +24,7 @@ program
   .description('自定义packx.config.js开发，构建，mpa打包')
   .option('--build [build]', 'build模式')
   .action((options) => {
-    pack(!options.build, options.port, options.publicPath);
+    pack(!options.build);
   });
 
 program.parse(process.argv);

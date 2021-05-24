@@ -430,4 +430,23 @@ export const pack = (isDev = true) => {
   }
 };
 
+// node called api
+export default function nodeApi(isDev, config: Configuration) {
+  const { entry, devServer = {}, ...others } = config;
+  if (typeof entry === 'object' && entry) {
+    const keys = Object.keys(entry);
+
+    if (keys.length) {
+      const _config = getConfig(isDev, entry);
+      const mergedConfig = merge({}, _config, others);
+
+      return runWebpack(mergedConfig, keys[0], isDev, 9000, devServer);
+    } else {
+      exit('请配置entry');
+    }
+  } else {
+    exit('请配置entry');
+  }
+}
+
 //#endregion
