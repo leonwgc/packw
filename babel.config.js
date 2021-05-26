@@ -5,7 +5,6 @@ module.exports = {
         node: 'current',
       },
     }),
-    require.resolve('@babel/preset-react'),
     require.resolve('@babel/preset-typescript'),
   ],
   plugins: [
@@ -13,6 +12,5 @@ module.exports = {
       require.resolve('@babel/plugin-transform-runtime'),
       { corejs: { version: 3, proposals: true } },
     ],
-    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: false }],
   ],
 };
