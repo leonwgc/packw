@@ -105,7 +105,10 @@ const getBabelOptions = (isDev: boolean) => {
   const plugins = [
     [require.resolve('@babel/plugin-transform-runtime')],
     [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
-    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: false }],
+    [
+      require.resolve('@babel/plugin-proposal-class-properties'),
+      { loose: false },
+    ],
   ];
 
   if (isDev) {
@@ -178,9 +181,9 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
                   minifyURLs: true,
                 },
               }
-            : undefined
-        )
-      )
+            : undefined,
+        ),
+      ),
     );
   }
 
@@ -190,7 +193,11 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
 //#endregion
 
 //#region  config
-const getConfig = (isDev = true, entry: {}, publicPath = '/'): Configuration => {
+const getConfig = (
+  isDev = true,
+  entry: {},
+  publicPath = '/',
+): Configuration => {
   const entryKeys = Object.keys(entry);
   const htmlsPlugins = getHtmlPluginsConfig(entryKeys, isDev);
   const name = entryKeys.join('-');
@@ -298,7 +305,7 @@ const getConfig = (isDev = true, entry: {}, publicPath = '/'): Configuration => 
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
         overlay: true,
-      })
+      }),
     );
   } else {
     config.optimization = {
@@ -319,7 +326,8 @@ const runWebpack = (
   openFile = 'index',
   isDev: boolean,
   port: number,
-  _devServer: {} | null | undefined
+  _devServer: {} | null | undefined,
+  callback: () => void = () => {},
 ) => {
   let devServer;
 
@@ -338,7 +346,7 @@ const runWebpack = (
     const p = serverConfig.port || port;
     devServer = new WebpackDevServer(compiler, serverConfig);
 
-    devServer.listen(p, serverConfig.host, async (err) => {
+    devServer.listen(p, serverConfig.host, (err) => {
       if (err) {
         exit(err);
       }
@@ -355,6 +363,9 @@ const runWebpack = (
 
       compiler.close(() => {
         console.log(chalk.green('构建完成'));
+        if (typeof callback == 'function') {
+          callback();
+        }
       });
     });
   }
@@ -371,7 +382,12 @@ const runWebpack = (
 //#endregion
 
 //#region spa mode
-export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) => {
+export const run = (
+  dir = 'index',
+  publicPath = '/',
+  isDev = true,
+  port = 9000,
+) => {
   let s = glob.sync(`./src/${dir}/index{.jsx,.js,.ts,.tsx}`);
   let isDir = true;
   if (!s.length) {
@@ -392,7 +408,7 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
 
 //#region mpa mode
 
-export const pack = (isDev = true, port = 9000, publicPath = '/') => {
+export const pack = (isDev = true) => {
   const configFile = getProjectPath('./packx.config.js');
 
   if (!fs.existsSync(configFile)) {
@@ -406,13 +422,46 @@ export const pack = (isDev = true, port = 9000, publicPath = '/') => {
     const keys = Object.keys(entry);
 
     if (keys.length) {
-      const config = getConfig(isDev, entry, publicPath);
-      const mergedConfig = merge(config, others);
+      const config = getConfig(isDev, entry);
+      const mergedConfig = merge({}, config, others);
 
-      return runWebpack(mergedConfig, keys[0], isDev, port, devServer);
+      return runWebpack(mergedConfig, keys[0], isDev, 9000, devServer);
+    } else {
+      exit('请配置entry');
     }
+  } else {
+    exit('请配置entry');
   }
-  exit('1');
 };
+
+// node called api
+export default function nodeApi(
+  isDev: boolean,
+  config: Configuration,
+  callback: () => void = () => {},
+) {
+  const { entry, devServer = {}, ...others } = config as any;
+  if (typeof entry === 'object' && entry) {
+    const keys = Object.keys(entry);
+
+    if (keys.length) {
+      const _config = getConfig(isDev, entry);
+      const mergedConfig = merge({}, _config, others);
+
+      return runWebpack(
+        mergedConfig,
+        keys[0],
+        isDev,
+        9000,
+        devServer,
+        callback,
+      );
+    } else {
+      exit('请配置entry');
+    }
+  } else {
+    exit('请配置entry');
+  }
+}
 
 //#endregion

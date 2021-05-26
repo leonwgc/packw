@@ -23,10 +23,8 @@ program
   .command('run')
   .description('自定义packx.config.js开发，构建，mpa打包')
   .option('--build [build]', 'build模式')
-  .option('--port [port]', '端口号', 9000)
-  .option('--public-path [publicPath]', '设置publicPath, 默认 /', '/')
   .action((options) => {
-    pack(!options.build, options.port, options.publicPath);
+    pack(!options.build);
   });
 
 program.parse(process.argv);

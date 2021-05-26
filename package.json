@@ -1,10 +1,12 @@
 {
   "name": "packx",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "cli tool for react mpa/spa app",
   "bin": {
     "packx": "./bin/cli.js"
   },
+  "main": "./lib/pack.js",
+  "typings": "./lib/pack.d.ts",
   "scripts": {
     "build": "babel -x '.ts' src -d lib",
     "pub": "bash pub.sh"
