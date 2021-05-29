@@ -15,6 +15,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import webpack, { Configuration } from 'webpack';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+export { getSsrLib, injectHtmlToRootNode } from './lib';
 import tpl from './tpl';
 
 //#endregion
@@ -105,10 +106,7 @@ const getBabelOptions = (isDev: boolean) => {
   const plugins = [
     [require.resolve('@babel/plugin-transform-runtime')],
     [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
-    [
-      require.resolve('@babel/plugin-proposal-class-properties'),
-      { loose: false },
-    ],
+    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: false }],
   ];
 
   if (isDev) {
@@ -181,9 +179,9 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
                   minifyURLs: true,
                 },
               }
-            : undefined,
-        ),
-      ),
+            : undefined
+        )
+      )
     );
   }
 
@@ -193,14 +191,56 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
 //#endregion
 
 //#region  config
-const getConfig = (
+export const getConfig = (
   isDev = true,
   entry: {},
   publicPath = '/',
+  target: 'node' | 'web' = 'web'
 ): Configuration => {
   const entryKeys = Object.keys(entry);
-  const htmlsPlugins = getHtmlPluginsConfig(entryKeys, isDev);
+  const isNodeTarget = target === 'node';
+  const htmlsPlugins = isNodeTarget ? [] : getHtmlPluginsConfig(entryKeys, isDev);
   const name = entryKeys.join('-');
+
+  const styleLoaders = !isNodeTarget
+    ? [
+        {
+          test: /\.less$/,
+          use: getStyleLoaders('less', isDev),
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: getStyleLoaders('sass', isDev),
+        },
+        {
+          test: /\.css$/,
+          use: getStyleLoaders('css', isDev),
+        },
+      ]
+    : [
+        {
+          test: /\.(less|sass|scss|css)$/,
+          use: require.resolve('./ignore'),
+        },
+      ];
+
+  const plugins = [
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      __dev__: isDev,
+    }),
+    new WebpackBar({ name: 'packx' }),
+  ];
+
+  if (!isNodeTarget) {
+    plugins.push(
+      new MiniCssExtractPlugin({
+        filename: `[name].[contenthash:6].css`,
+        chunkFilename: `[name].[contenthash:6].css`,
+      })
+    );
+    plugins.push(...htmlsPlugins);
+  }
 
   const config = {
     mode: isDev ? 'development' : 'production',
@@ -213,7 +253,7 @@ const getConfig = (
       publicPath,
     },
     devtool: isDev ? 'cheap-module-source-map' : false,
-    target: 'web',
+    target,
     cache: isDev
       ? {
           type: 'filesystem',
@@ -234,18 +274,7 @@ const getConfig = (
             options: getBabelOptions(isDev),
           },
         },
-        {
-          test: /\.less$/,
-          use: getStyleLoaders('less', isDev),
-        },
-        {
-          test: /\.s[ac]ss$/i,
-          use: getStyleLoaders('sass', isDev),
-        },
-        {
-          test: /\.css$/,
-          use: getStyleLoaders('css', isDev),
-        },
+
         {
           test: /\.(png|jpg|gif|jpeg|svg)$/,
           ...getAssetConfig('images'),
@@ -254,6 +283,7 @@ const getConfig = (
           test: /\.(ttf|otf|woff|woff2|eot)$/,
           ...getAssetConfig('fonts'),
         },
+        ...styleLoaders,
       ],
     },
     resolve: {
@@ -280,32 +310,23 @@ const getConfig = (
           },
         },
       },
-      runtimeChunk: {
-        name: 'runtime',
-      },
+      runtimeChunk: isNodeTarget
+        ? false
+        : {
+            name: 'runtime',
+          },
       moduleIds: isDev ? 'named' : 'deterministic',
       chunkIds: isDev ? 'named' : 'deterministic',
     },
     stats: 'errors-warnings',
-    plugins: [
-      new CleanWebpackPlugin(),
-      new MiniCssExtractPlugin({
-        filename: `[name].[contenthash:6].css`,
-        chunkFilename: `[name].[contenthash:6].css`,
-      }),
-      new webpack.DefinePlugin({
-        __dev__: isDev,
-      }),
-      new WebpackBar({ name: 'packx' }),
-      ...htmlsPlugins,
-    ],
+    plugins,
   };
 
   if (isDev) {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
         overlay: true,
-      }),
+      })
     );
   } else {
     config.optimization = {
@@ -325,9 +346,9 @@ const runWebpack = (
   config: Configuration,
   openFile = 'index',
   isDev: boolean,
-  port: number,
-  _devServer: {} | null | undefined,
-  callback: () => void = () => {},
+  port?: number,
+  _devServer?: {} | null | undefined,
+  callback?: () => void
 ) => {
   let devServer;
 
@@ -382,12 +403,7 @@ const runWebpack = (
 //#endregion
 
 //#region spa mode
-export const run = (
-  dir = 'index',
-  publicPath = '/',
-  isDev = true,
-  port = 9000,
-) => {
+export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) => {
   let s = glob.sync(`./src/${dir}/index{.jsx,.js,.ts,.tsx}`);
   let isDir = true;
   if (!s.length) {
@@ -438,7 +454,7 @@ export const pack = (isDev = true) => {
 export default function nodeApi(
   isDev: boolean,
   config: Configuration,
-  callback: () => void = () => {},
+  callback: () => void = () => {}
 ) {
   const { entry, devServer = {}, ...others } = config as any;
   if (typeof entry === 'object' && entry) {
@@ -448,14 +464,7 @@ export default function nodeApi(
       const _config = getConfig(isDev, entry);
       const mergedConfig = merge({}, _config, others);
 
-      return runWebpack(
-        mergedConfig,
-        keys[0],
-        isDev,
-        9000,
-        devServer,
-        callback,
-      );
+      return runWebpack(mergedConfig, keys[0], isDev, 9000, devServer, callback);
     } else {
       exit('请配置entry');
     }
