@@ -10,9 +10,10 @@
 4. 支持 typescript
 5. 支持自定义 html 模板和自动生成 html 入口
 6. 支持 react hmr
-7. 支持自定义 postcss, 比如 px2rem, px2viewport
+7. 支持扩展 postcss, 比如 px2rem, px2viewport
 8. 支持自定义配置，覆盖默认 webpack config (基于 webpack merge 算法)
 9. 支持 node api 调用和命令行调用
+10. 支持ssr
 
 #### 用法
 
