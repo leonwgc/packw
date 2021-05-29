@@ -1,6 +1,6 @@
 {
   "name": "packx",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "cli tool for react mpa/spa app",
   "bin": {
     "packx": "./bin/cli.js"
