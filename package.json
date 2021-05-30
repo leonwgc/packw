@@ -1,15 +1,17 @@
 {
   "name": "packx",
-  "version": "0.4.1",
-  "description": "cli tool for react mpa/spa app",
+  "version": "0.4.2",
+  "description": "基于webpack5开发/打包工具",
   "bin": {
     "packx": "./bin/cli.js"
   },
   "main": "./lib/pack.js",
   "typings": "./lib/pack.d.ts",
   "scripts": {
+    "clear":"rm ./lib/*.map && clear",
     "build": "babel -x '.ts' src -d lib",
-    "pub": "bash pub.sh"
+    "pub": "bash pub.sh",
+    "dev": "yarn build -w -s"
   },
   "tags": [
     "react",

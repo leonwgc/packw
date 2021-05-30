@@ -2,50 +2,53 @@
 
 基于 webpack5 开发/打包工具
 
+## 安装
+
+用 [npm](https://npmjs.org/) / [yarn](https://yarnpkg.com) 安装:
+
+    $ npm install -D packx
+    $ yarn add -D packx
+
 #### 特性
 
 1. 基于 webpack5
 2. 支持 less,sass
-3. 支持 spa/mpa 开发和构建
+3. 支持 spa/mpa
 4. 支持 typescript
-5. 支持自定义 html 模板和自动生成 html 入口
+5. 支持自定义html模板和自动生成 html入口
 6. 支持 react hmr
 7. 支持扩展 postcss, 比如 px2rem, px2viewport
-8. 支持自定义配置，覆盖默认 webpack config (基于 webpack merge 算法)
+8. 支持自定义配置packx.config.js，覆盖默认webpack配置 (基于 webpack merge 算法)
 9. 支持 node api 调用和命令行调用
 10. 支持ssr
 
 #### 用法
 
-- 开发 packx start dir/file [-p port]
-- 构建 packx build dir/file [-p publicPath]
-- 自定义 packx run [--build 构建输出],配置 packx.config.js
+- 开发 packx start [-p port]
+- 构建 packx build [-p publicPath]
+- 自定义 packx run [--build],配置 packx.config.js
 - js api 调用
+- ssr 
 
 #### 入口在 ./src 目录下,比如./src/index.jsx
 
 ```js
---src - index.jsx;
+--src
+  - index.jsx;
 ```
 
-运行 packx start index
+运行 packx start
 
-#### 入口在 ./src 目录下,比如./src/demo.jsx
+#### 入口在 ./src/page/ 目录下,比如./src/page/index.tsx
 
 ```js
---src - demo.tsx;
+--src 
+  --page
+     -index.tsx;
 ```
 
-运行 packx start demo
+运行 packx start page
 
-#### 对于 mpa 多目录应用, 入口在 ./src/page1/index 目录下,比如./src/page1/index.jsx
-
-```js
---src;
---page1 - index.jsx;
-```
-
-运行 packx start page1
 
 ##### 入口 html, 如果项目不包含 index.html ，默认会生成 index.html,可以自定义 html 结构
 
@@ -100,7 +103,7 @@ module.exports = (ctx) => {
 };
 ```
 
-#### 通过 packx.config.js 自定义配置
+#### packx run 通过 packx.config.js 自定义配置
 
 注意，除了 entry 限制为 object 外， 配置项和 webpack 配置一致
 下面通过自定义配置 packx.config.js 实现了 mpa 项目的打包
@@ -119,6 +122,9 @@ module.exports = {
   },
 };
 ```
+
+- 开发 packx run 
+- 构建 packx run --build 
 
 ### node 命令行用法
 
@@ -152,5 +158,9 @@ pack(isDev, {
 项目结构和打包输出如下图
 
 ![structure.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27201daa7a384f368d5f37060d846c07~tplv-k3u1fbpfcp-watermark.image)
+
+
+#### ssr 
+ ssr和上述使用参考packx-demo库
 
 项目代码参考 [https://github.com/leonwgc/packx-demo](https://github.com/leonwgc/packx-demo)

@@ -409,7 +409,7 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
   if (!s.length) {
     s = glob.sync(`./src/index{.jsx,.js,.ts,.tsx}`);
     if (!s.length) {
-      exit(`can't find entry file`);
+      exit(`No entry file found : ${getProjectPath('./src/index')}`);
     }
     isDir = false;
   }
