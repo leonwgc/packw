@@ -8,11 +8,9 @@
   "main": "./lib/pack.js",
   "typings": "./lib/pack.d.ts",
   "scripts": {
-    "clear": "rm ./lib/*.map && clear",
-    "build": "babel -x '.ts' src -d lib",
     "pub": "bash pub.sh",
-    "dev": "yarn build -w -s",
-    "b": "father-build --cjs=babel && tsc"
+    "dev": "father-build --cjs babel --target node -w",
+    "build": "father-build --cjs babel --target node && tsc"
   },
   "tags": [
     "react",
