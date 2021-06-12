@@ -1,11 +1,10 @@
 import { Command } from 'commander';
 import { run, pack } from './pack';
-// import pkg from '../package.json';
 
 const program = new Command('packx');
 
 program.name('packx').usage('[options] start/build/run');
-// program.version(pkg.version as string, '-v, --version');
+program.version(require('../package').version, '-v, --version');
 
 program
   .command('start [dir]')
