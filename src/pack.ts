@@ -80,7 +80,6 @@ const getStyleLoaders = (type = 'less', isDev: boolean) => {
       loaders.push({
         loader: require.resolve('sass-loader'),
         options: {
-          implementation: require('sass'),
           sourceMap: isDev,
         },
       });
@@ -263,7 +262,14 @@ export const getConfig = (
           },
           store: 'pack',
         }
-      : false,
+      : {
+          type: 'filesystem',
+          name: name + '-prd',
+          buildDependencies: {
+            config: [__filename],
+          },
+          store: 'pack',
+        },
     module: {
       rules: [
         {
@@ -371,7 +377,7 @@ const runWebpack = (
       if (err) {
         exit(err);
       }
-      const serveUrl = `http://localhost:${p}/${openFile}.html`;
+      const serveUrl = `http://localhost:${p}/${openFile === 'index' ? '' : openFile + '.html'}`;
       console.log(chalk.green(`dev server: ${serveUrl}`));
     });
   } else {
