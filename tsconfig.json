@@ -19,7 +19,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "strictNullChecks": false,
-    "outDir": "lib",
+    "outDir": "types",
     "lib": ["es2015", "dom", "es2015.promise"]
   },
   "include": ["src/**/*"],
