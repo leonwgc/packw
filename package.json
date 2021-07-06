@@ -9,8 +9,8 @@
   "typings": "./types/pack.d.ts",
   "scripts": {
     "pub": "bash pub.sh",
-    "dev": "father-build --cjs babel --target node -w",
-    "build": "father-build --cjs babel --target node"
+    "dev": "father-build -w",
+    "build": "father-build"
   },
   "tags": [
     "react",
