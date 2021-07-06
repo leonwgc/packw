@@ -12,5 +12,6 @@ module.exports = {
       require.resolve('@babel/plugin-transform-runtime'),
       { corejs: { version: 3, proposals: true } },
     ],
+    ['@babel/plugin-proposal-private-methods', { loose: true }],
   ],
 };
