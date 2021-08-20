@@ -15,6 +15,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import webpack, { Configuration } from 'webpack';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import address from 'address';
 export { getSsrLib, injectHtmlToRootNode } from './lib';
 import tpl from './tpl';
 
@@ -377,8 +378,12 @@ const runWebpack = (
       if (err) {
         exit(err);
       }
-      const serveUrl = `http://localhost:${p}/${openFile === 'index' ? '' : openFile + '.html'}`;
-      console.log(chalk.green(`dev server: ${serveUrl}`));
+      const page = `${openFile === 'index' ? '' : openFile + '.html'}`;
+      const serveUrl = `http://localhost:${p}/${page}`;
+      const serverUrlIp = `http://${address.ip()}:${p}/${page}`;
+      console.log(chalk.green('开发地址'));
+      console.log(chalk.green(`${serveUrl}`));
+      console.log(chalk.green(`${serverUrlIp}`));
     });
   } else {
     const compiler = webpack(config);
