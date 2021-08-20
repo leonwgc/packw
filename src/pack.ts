@@ -461,11 +461,13 @@ export const pack = (isDev = true) => {
   }
 };
 
-// node called api
-export default function nodeApi(
-  isDev: boolean,
-  config: Configuration,
-  callback: () => void = () => {}
+/**
+ * node-api自定义构建
+ */
+export default function packx(
+  isDev: boolean /** 是否development开发模式 */,
+  config: Configuration /** webpack配置对象 */,
+  callback?: () => void /** production模式构建完成执行的回调*/
 ) {
   const { entry, devServer = {}, ...others } = config as any;
   if (typeof entry === 'object' && entry) {
