@@ -339,7 +339,7 @@ export const getConfig = (
     config.optimization = {
       ...config.optimization,
       minimize: true,
-      minimizer: [new CssMinimizerPlugin()],
+      minimizer: [new CssMinimizerPlugin(), '...'],
     } as any;
   }
 

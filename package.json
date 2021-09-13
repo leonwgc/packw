@@ -1,6 +1,6 @@
 {
   "name": "packx",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "基于webpack5开发/打包工具",
   "bin": {
     "packx": "./bin/cli.js"
