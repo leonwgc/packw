@@ -353,15 +353,15 @@ const runWebpack = (
   config: Configuration,
   openFile = 'index',
   isDev: boolean,
-  port?: number,
-  _devServer?: {} | null | undefined,
+  devPort?: number,
+  devServerConfig?: WebpackDevServer.Configuration,
   callback?: () => void
 ) => {
   let devServer;
 
   if (isDev) {
     const compiler = webpack(config);
-    const serverConfig: { [p: string]: unknown } = {
+    const serverConfig: WebpackDevServer.Configuration = {
       publicPath: '/',
       compress: true,
       host: '0.0.0.0',
@@ -369,18 +369,18 @@ const runWebpack = (
       hot: true,
       inline: true,
       noInfo: true,
-      ..._devServer,
+      ...devServerConfig,
     };
-    const p = serverConfig.port || port;
+    const port = serverConfig.port || devPort;
     devServer = new WebpackDevServer(compiler, serverConfig);
 
-    devServer.listen(p, serverConfig.host, (err) => {
+    devServer.listen(port, serverConfig.host, (err) => {
       if (err) {
         exit(err);
       }
       const page = `${openFile === 'index' ? '' : openFile + '.html'}`;
-      const serveUrl = `http://localhost:${p}/${page}`;
-      const serverUrlIp = `http://${address.ip()}:${p}/${page}`;
+      const serveUrl = `http://localhost:${port}/${page}`;
+      const serverUrlIp = `http://${address.ip()}:${port}/${page}`;
       console.log(chalk.green('开发地址'));
       console.log(chalk.green(`${serveUrl}`));
       console.log(chalk.green(`${serverUrlIp}`));
@@ -428,46 +428,23 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
 
   const config = getConfig(isDev, { [dir]: entryFile }, publicPath);
 
-  runWebpack(config, isDir ? dir : 'index', isDev, port, null);
+  runWebpack(config, isDir ? dir : 'index', isDev, port);
 };
 
 //#endregion
 
 //#region mpa mode
 
-export const pack = (isDev = true) => {
-  const configFile = getProjectPath('./packx.config.js');
-
-  if (!fs.existsSync(configFile)) {
-    exit(`配置不存在:packx.config.js`);
-  }
-
-  const custConfig = require(configFile);
-  const { entry, devServer = {}, ...others } = custConfig;
-
-  if (typeof entry === 'object' && entry) {
-    const keys = Object.keys(entry);
-
-    if (keys.length) {
-      const config = getConfig(isDev, entry);
-      const mergedConfig = merge({}, config, others);
-
-      return runWebpack(mergedConfig, keys[0], isDev, 9000, devServer);
-    } else {
-      exit('请配置entry');
-    }
-  } else {
-    exit('请配置entry');
-  }
-};
-
 /**
- * node-api自定义构建
+ * node自定义构建
  */
 export default function packx(
-  isDev: boolean /** 是否development开发模式 */,
-  config: Configuration /** webpack配置对象 */,
-  callback?: () => void /** production模式构建完成执行的回调*/
+  /** 是否开发模式 */
+  isDev: boolean,
+  /** webpack配置对象 */
+  config: Configuration,
+  /** production模式构建完成执行的回调*/
+  callback?: () => void
 ) {
   const { entry, devServer = {}, ...others } = config as any;
   if (typeof entry === 'object' && entry) {

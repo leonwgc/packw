@@ -12,7 +12,7 @@ const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
 };
 
-// get a ssr commonjs2 lib to render html string
+/** get a ssr commonjs2 lib to render html string */
 export const getSsrLib = (entry, callback?: () => void) => {
   const config = getConfig(false, entry, '', 'node');
 
