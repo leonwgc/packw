@@ -1,6 +1,6 @@
 ### packx
 
-基于 webpack5 的开发/构建工具
+基于 webpack5 的开发构建 cli 工具
 
 ## 安装
 
@@ -13,19 +13,17 @@
 
 1. 基于最新的 webpack5
 2. 支持 less,sass,css-in-js
-3. 支持 spa/mpa 应用（单页面/多页面）
+3. 支持 spa/mpa
 4. 支持 typescript
-5. 支持自定义 html 模板和自动生成 html 入口
-6. 支持 react hmr
-7. 支持 node api 调用和 cli 调用
-8. 支持 ssr
-9. 支持自定义配置 webpack configration 覆盖
+5. 支持 node 调用和 cli 调用
+6. 支持 ssr
+7. 支持自定义 webpack 配置
 
 #### 用法
 
 - 开发 packx start [-p port]
 - 构建 packx build [-p publicPath]
-- node api 调用 (推荐，start/build 可以替代 create-react-app 使用 )
+- node 调用 (推荐，start/build 可以替代 create-react-app 使用 )
 - ssr
 
 ##### 入口 html, 如果项目不包含 index.html ，默认会生成 index.html,可以自定义 html 结构
@@ -51,7 +49,7 @@
 
 ```
 
-#### 扩展 postcss 插件 demo 
+#### 扩展 postcss 插件 demo
 
 项目根目录添加 postcss.config.js， 以添加 postcss-plugin-px2rem 为例
 
@@ -65,10 +63,20 @@ module.exports = (ctx) => {
 
 ### node 命令行用法（推荐）
 
-packx 默认导出了一个 nodeApi, 函数签名如下, Configuration 为 webpack 配置对象
+packx 默认导出了一个 nodeApi, 函数签名如下
 
 ```js
-export default function nodeApi(isDev: boolean, config: Configuration, callback?: () => void): void;
+/**
+ * node自定义构建
+ *
+ * @export
+ * @param {boolean} isDev 是否开发模式
+ * @param {Configuration} config webpack Configuration配置
+ * @param {() => void} [callback] 非开发模式编译完成的回调
+ * @return {*}
+ */
+export default function packx(isDev: boolean, config: Configuration, callback?: () => void): void;
+
 ```
 
 ```js

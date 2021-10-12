@@ -12,7 +12,12 @@ const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
 };
 
-/** get a ssr commonjs2 lib to render html string */
+/**
+ *  编译commonjs库,用于node端渲染html
+ *
+ * @param {*} entry
+ * @param {() => void} [callback]
+ */
 export const getSsrLib = (entry, callback?: () => void) => {
   const config = getConfig(false, entry, '', 'node');
 
@@ -39,13 +44,17 @@ export const getSsrLib = (entry, callback?: () => void) => {
 
     compiler.close(() => {
       console.log(chalk.green('库构建完成'));
-      if (typeof callback == 'function') {
-        callback();
-      }
+      callback?.();
     });
   });
 };
-
+/**
+ *
+ *
+ * @param {string} htmlFilePath 文件路径
+ * @param {string} [html=''] 注入的html
+ * @param {string} [rootSelector='#root'] 注入到的html element 元素, 比如ReactDOM render的root container
+ */
 export const injectHtmlToRootNode = (
   htmlFilePath: string,
   html: string = '',

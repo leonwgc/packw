@@ -395,9 +395,7 @@ const runWebpack = (
 
       compiler.close(() => {
         console.log(chalk.green('构建完成'));
-        if (typeof callback == 'function') {
-          callback();
-        }
+        callback?.();
       });
     });
   }
@@ -420,7 +418,7 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
   if (!s.length) {
     s = glob.sync(`./src/index{.jsx,.js,.ts,.tsx}`);
     if (!s.length) {
-      exit(`No entry file found : ${getProjectPath('./src/index')}`);
+      exit(`入口文件未找到 : ${getProjectPath('./src/index')}`);
     }
     isDir = false;
   }
@@ -437,15 +435,14 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
 
 /**
  * node自定义构建
+ *
+ * @export
+ * @param {boolean} isDev 是否开发模式
+ * @param {Configuration} config webpack Configuration配置
+ * @param {() => void} [callback] 非开发模式编译完成的回调
+ * @return {*}
  */
-export default function packx(
-  /** 是否开发模式 */
-  isDev: boolean,
-  /** webpack配置对象 */
-  config: Configuration,
-  /** production模式构建完成执行的回调*/
-  callback?: () => void
-) {
+export default function packx(isDev: boolean, config: Configuration, callback?: () => void) {
   const { entry, devServer = {}, ...others } = config as any;
   if (typeof entry === 'object' && entry) {
     const keys = Object.keys(entry);
