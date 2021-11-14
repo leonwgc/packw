@@ -9,7 +9,7 @@ program.version(require('../package').version, '-v, --version');
 program
   .command('start')
   .description('开发')
-  .option('-p, --port [port]', '端口号', 9000)
+  .option('-p, --port [port]', '端口号', '9000')
   .action((options) => {
     run('index', '/', true, options.port);
   });

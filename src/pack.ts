@@ -224,7 +224,7 @@ export const getConfig = (
         },
       ];
 
-  const plugins = [
+  const plugins: Array<unknown> = [
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       __dev__: isDev,
@@ -372,7 +372,7 @@ const runWebpack = (
       ...devServerConfig,
     };
     const port = serverConfig.port || devPort;
-    devServer = new WebpackDevServer(compiler, serverConfig);
+    devServer = new WebpackDevServer(compiler as any, serverConfig);
 
     devServer.listen(port, serverConfig.host, (err) => {
       if (err) {
