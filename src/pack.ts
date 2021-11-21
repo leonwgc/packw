@@ -381,9 +381,13 @@ const runWebpack = (
       const page = `${openFile === 'index' ? '' : openFile + '.html'}`;
       const serveUrl = `http://localhost:${port}/${page}`;
       const serverUrlIp = `http://${address.ip()}:${port}/${page}`;
-      console.log(chalk.green('开发地址'));
-      console.log(chalk.green(`${serveUrl}`));
-      console.log(chalk.green(`${serverUrlIp}`));
+
+      console.log();
+      console.log(chalk.cyan('dev server running at:'));
+      console.log();
+      console.log('> Local:', chalk.green(`${serveUrl}`));
+      console.log();
+      console.log('> Network:', chalk.green(`${serverUrlIp}`));
     });
   } else {
     const compiler = webpack(config);
