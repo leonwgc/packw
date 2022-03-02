@@ -332,7 +332,7 @@ export const getConfig = (
   if (isDev) {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
-        overlay: true,
+        overlay: false,
       })
     );
   } else {
