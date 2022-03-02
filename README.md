@@ -1,6 +1,6 @@
 ### packx
 
-基于 webpack5 的开发构建 cli 工具
+webpack5 打包构建
 
 ## 安装
 
