@@ -1,9 +1,9 @@
 import { Command } from 'commander';
 import { run } from './pack';
 
-const program = new Command('w-pack');
+const program = new Command('packw');
 
-program.name('w-pack').usage('[options] start/build/run');
+program.name('packw').usage('[options] start/build/run');
 program.version(require('../package').version, '-v, --version');
 
 program

@@ -229,7 +229,7 @@ export const getConfig = (
     new webpack.DefinePlugin({
       __dev__: isDev,
     }),
-    new WebpackBar({ name: 'w-pack' }),
+    new WebpackBar({ name: 'packw' }),
   ];
 
   if (!isNodeTarget) {

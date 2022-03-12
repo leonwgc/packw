@@ -1,4 +1,4 @@
-### w-pack
+### packw
 
 webpack5 打包构建
 
@@ -6,8 +6,8 @@ webpack5 打包构建
 
 用 [npm](https://npmjs.org/) / [yarn](https://yarnpkg.com) 安装:
 
-    $ npm install -D w-pack
-    $ yarn add -D w-pack
+    $ npm install -D packw
+    $ yarn add -D packw
 
 #### 特性
 
@@ -21,8 +21,8 @@ webpack5 打包构建
 
 #### 用法
 
-- 开发 w-pack start [-p port]
-- 构建 w-pack build [-p publicPath]
+- 开发 packw start [-p port]
+- 构建 packw build [-p publicPath]
 - node 调用 (推荐，start/build 可以替代 create-react-app 使用 )
 - ssr
 
@@ -63,7 +63,7 @@ module.exports = (ctx) => {
 
 ### node 命令行用法（推荐）
 
-w-pack 默认导出了一个 nodeApi, 函数签名如下
+packw 默认导出了一个 nodeApi, 函数签名如下
 
 ```js
 /**
@@ -75,12 +75,12 @@ w-pack 默认导出了一个 nodeApi, 函数签名如下
  * @param {() => void} [callback] 非开发模式编译完成的回调
  * @return {*}
  */
-export default function w-pack(isDev: boolean, config: Configuration, callback?: () => void): void;
+export default function packw(isDev: boolean, config: Configuration, callback?: () => void): void;
 
 ```
 
 ```js
-const { default: pack } = require('w-pack');
+const { default: pack } = require('packw');
 ...
 
 pack(isDev, {
@@ -106,6 +106,6 @@ pack(isDev, {
 
 #### ssr
 
-ssr 和上述使用参考 w-pack-demo 库
+ssr 和上述使用参考 packw-demo 库
 
-项目代码参考 [https://github.com/leonwgc/w-pack-demo](https://github.com/leonwgc/w-pack-demo)
+项目代码参考 [https://github.com/leonwgc/packw-demo](https://github.com/leonwgc/packw-demo)

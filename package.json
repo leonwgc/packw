@@ -1,9 +1,9 @@
 {
-  "name": "w-pack",
+  "name": "packw",
   "version": "1.0.0",
   "description": "webpack5 构建",
   "bin": {
-    "w-pack": "./bin/cli.js"
+    "packw": "./bin/cli.js"
   },
   "main": "./lib/pack.js",
   "typings": "./types/pack.d.ts",
