@@ -80,6 +80,7 @@
     "@types/glob": "^7.2.0",
     "@types/node": "^16.11.7",
     "@types/webpack-dev-server": "^3.11.5",
+    "babel-preset-minify": "^0.5.1",
     "father-build": "^1.21.1"
   },
   "files": [

@@ -229,7 +229,7 @@ export const getConfig = (
     new webpack.DefinePlugin({
       __dev__: isDev,
     }),
-    new WebpackBar({ name: 'packx' }),
+    new WebpackBar({ name: 'w-pack' }),
   ];
 
   if (!isNodeTarget) {
@@ -446,7 +446,7 @@ export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) 
  * @param {() => void} [callback] 非开发模式编译完成的回调
  * @return {*}
  */
-export default function packx(isDev: boolean, config: Configuration, callback?: () => void) {
+export default function pack(isDev: boolean, config: Configuration, callback?: () => void) {
   const { entry, devServer = {}, ...others } = config as any;
   if (typeof entry === 'object' && entry) {
     const keys = Object.keys(entry);

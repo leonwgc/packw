@@ -11,4 +11,4 @@ export declare const run: (dir?: string, publicPath?: string, isDev?: boolean, p
  * @param {() => void} [callback] 非开发模式编译完成的回调
  * @return {*}
  */
-export default function packx(isDev: boolean, config: Configuration, callback?: () => void): void;
+export default function pack(isDev: boolean, config: Configuration, callback?: () => void): void;
