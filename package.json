@@ -1,6 +1,6 @@
 {
   "name": "packw",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "webpack5 构建",
   "bin": {
     "packw": "./bin/cli.js"
@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.2",
     "@babel/runtime-corejs3": "^7.17.2",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.5.4",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.5",
     "address": "^1.1.2",
     "autoprefixer": "^10.4.2",
     "babel-loader": "^8.2.3",
