@@ -1,6 +1,6 @@
 {
   "name": "packw",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "webpack5 构建",
   "bin": {
     "packw": "./bin/cli.js"
@@ -64,7 +64,7 @@
     "mini-css-extract-plugin": "^2.5.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^7.4.3",
     "react-refresh": "^0.11.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
