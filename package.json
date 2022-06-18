@@ -1,6 +1,6 @@
 {
   "name": "packw",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "webpack5 构建",
   "bin": {
     "packw": "./bin/cli.js"
@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.2",
     "@babel/runtime-corejs3": "^7.17.2",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.5.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "address": "^1.1.2",
     "autoprefixer": "^10.4.2",
     "babel-loader": "^8.2.3",
@@ -66,11 +66,11 @@
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.4.3",
     "postcss": "^8.4.12",
-    "react-refresh": "^0.11.0",
+    "react-refresh": "^0.14.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "typescript": "^4.6.2",
-    "webpack": "^5.69.1",
+    "webpack": "^5.73.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^3.0.0",
