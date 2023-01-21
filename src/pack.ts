@@ -15,8 +15,9 @@ import webpack, { Configuration } from 'webpack';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import address from 'address';
-export { getSsrLib, injectHtmlToRootNode } from './lib';
 import tpl from './tpl';
+export { getSsrLib } from './lib';
+export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
 
 const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);

@@ -1,5 +1,6 @@
 import { Configuration } from 'webpack';
-export { getSsrLib, injectHtmlToRootNode } from './lib';
+export { getSsrLib } from './lib';
+export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
 /**
  * Get a webpack configuration
  * @param dev

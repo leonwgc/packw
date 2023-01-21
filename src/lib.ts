@@ -1,31 +1,28 @@
 import { getWebpackConfig } from './pack';
 import chalk from 'chalk';
 import path from 'path';
-import fs from 'fs';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import cheerio from 'cheerio';
 import merge from 'webpack-merge';
-import { exit } from 'process';
 
 const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
 };
 
 /**
- *  编译commonjs库,用于node端渲染html
- *
- * @param {*} entry
- * @param {() => void} [callback]
+ * build lib for ssr
+ * @param entry
+ * @param output
+ * @param callback
  */
-export const getSsrLib = (entry, callback?: () => void) => {
+export const getSsrLib = (entry, output = './ssr-lib', callback?: () => void) => {
   const config = getWebpackConfig(false, entry, '', 'node');
 
   const ssrConfig = {
     entry,
     externals: [nodeExternals()],
     output: {
-      path: getProjectPath('./ssr-lib'),
+      path: getProjectPath(output),
       filename: '[name].js',
       library: {
         type: 'commonjs2',
@@ -43,34 +40,8 @@ export const getSsrLib = (entry, callback?: () => void) => {
     }
 
     compiler.close(() => {
-      console.log(chalk.green('库构建完成'));
+      console.log(chalk.green('successfully finished!'));
       callback?.();
     });
   });
-};
-/**
- *
- *
- * @param {string} htmlFilePath 文件路径
- * @param {string} [html=''] 注入的html
- * @param {string} [rootSelector='#root'] 注入到的html element 元素, 比如ReactDOM render的root container
- */
-export const injectHtmlToRootNode = (
-  htmlFilePath: string,
-  html: string = '',
-  rootSelector = '#root'
-) => {
-  if (fs.existsSync(htmlFilePath)) {
-    try {
-      const ohtml = fs.readFileSync(htmlFilePath, { encoding: 'utf-8' });
-      const $ = cheerio.load(ohtml);
-      $(rootSelector).html(html);
-      fs.writeFileSync(htmlFilePath, $.html());
-    } catch (ex) {
-      console.error(ex);
-      exit(1);
-    }
-  } else {
-    console.error(htmlFilePath + ' not exist');
-  }
 };
