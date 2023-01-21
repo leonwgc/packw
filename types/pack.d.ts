@@ -1,14 +1,28 @@
 import { Configuration } from 'webpack';
 export { getSsrLib, injectHtmlToRootNode } from './lib';
-export declare const getConfig: (isDev: boolean, entry: {}, publicPath?: string, target?: 'node' | 'web') => Configuration;
-export declare const run: (dir?: string, publicPath?: string, isDev?: boolean, port?: number) => void;
 /**
- * node自定义构建
+ * Get a webpack configuration
+ * @param dev
+ * @param entry
+ * @param publicPath
+ * @param target
+ * @returns
+ */
+export declare const getWebpackConfig: (dev: boolean, entry: {}, publicPath?: string, target?: 'node' | 'web') => Configuration;
+/**
+ * SPA build
+ * @param dir
+ * @param publicPath
+ * @param dev
+ * @param port
+ */
+export declare const run: (dir?: string, publicPath?: string, dev?: boolean, port?: number) => void;
+/**
+ * Node build
  *
  * @export
- * @param {boolean} isDev 是否开发模式
+ * @param {boolean} dev 是否开发模式
  * @param {Configuration} config webpack Configuration配置
- * @param {() => void} [callback] 非开发模式编译完成的回调
- * @return {*}
+ * @param {() => void} callback 生产环境构建完成的回调
  */
-export default function pack(isDev: boolean, config: Configuration, callback?: () => void): void;
+export default function pack(dev: boolean, config: Configuration, callback?: () => void): void;

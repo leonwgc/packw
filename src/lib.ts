@@ -1,4 +1,4 @@
-import { getConfig } from './pack';
+import { getWebpackConfig } from './pack';
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
@@ -19,7 +19,7 @@ const getProjectPath = (dir = './') => {
  * @param {() => void} [callback]
  */
 export const getSsrLib = (entry, callback?: () => void) => {
-  const config = getConfig(false, entry, '', 'node');
+  const config = getWebpackConfig(false, entry, '', 'node');
 
   const ssrConfig = {
     entry,

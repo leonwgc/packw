@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-//#region require
 import path from 'path';
 import fs from 'fs';
 import process from 'process';
@@ -19,9 +18,6 @@ import address from 'address';
 export { getSsrLib, injectHtmlToRootNode } from './lib';
 import tpl from './tpl';
 
-//#endregion
-
-//#region  helper
 const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
 };
@@ -31,18 +27,18 @@ function exit(error) {
   process.exit(9);
 }
 
-//#endregion
-
-//#endregion
-
-//#region style process
-// type: less, sass, css
-const getStyleLoaders = (type = 'less', isDev: boolean) => {
+/**
+ * Get style loaders config
+ * @param type less/sass/css
+ * @param dev
+ * @returns
+ */
+const getStyleLoaders = (type = 'less', dev: boolean) => {
   const loaders: any[] = [
     {
       loader: require.resolve('css-loader'),
       options: {
-        sourceMap: isDev,
+        sourceMap: dev,
       },
     },
     {
@@ -57,7 +53,7 @@ const getStyleLoaders = (type = 'less', isDev: boolean) => {
               stage: 3,
             }),
           ],
-          sourceMap: isDev,
+          sourceMap: dev,
         },
       },
     },
@@ -72,7 +68,7 @@ const getStyleLoaders = (type = 'less', isDev: boolean) => {
             relativeUrls: false,
             javascriptEnabled: true,
           },
-          sourceMap: isDev,
+          sourceMap: dev,
         },
       });
       break;
@@ -81,14 +77,14 @@ const getStyleLoaders = (type = 'less', isDev: boolean) => {
       loaders.push({
         loader: require.resolve('sass-loader'),
         options: {
-          sourceMap: isDev,
+          sourceMap: dev,
         },
       });
       break;
     }
   }
 
-  if (isDev) {
+  if (dev) {
     loaders.unshift({ loader: require.resolve('style-loader') });
   } else {
     loaders.unshift({
@@ -99,17 +95,19 @@ const getStyleLoaders = (type = 'less', isDev: boolean) => {
   return loaders;
 };
 
-//#endregion
-
-//#region  babel config
-const getBabelOptions = (isDev: boolean) => {
+/**
+ * Babel config
+ * @param dev
+ * @returns
+ */
+const getBabelConfig = (dev: boolean) => {
   const plugins = [
     [require.resolve('@babel/plugin-transform-runtime')],
     [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
     [require.resolve('@babel/plugin-proposal-class-properties'), { loose: false }],
   ];
 
-  if (isDev) {
+  if (dev) {
     plugins.push([require.resolve('react-refresh/babel')]);
   }
   return {
@@ -128,9 +126,11 @@ const getBabelOptions = (isDev: boolean) => {
   };
 };
 
-//#endregion
-
-//#region static asset
+/**
+ * Get static asset config
+ * @param type
+ * @returns
+ */
 const getAssetConfig = (type: string) => {
   return {
     type: 'asset',
@@ -145,18 +145,21 @@ const getAssetConfig = (type: string) => {
   };
 };
 
-//#endregion
-
-//#region html webpack
+/**
+ * Get html-webpack-plugins config and prepare the html template
+ * @param dirs
+ * @param isDev
+ * @returns
+ */
 const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
-  // index.html tpl check & emit
+  // Check & emit index.html in project root
   if (!fs.existsSync(getProjectPath('./index.html'))) {
     fs.writeFileSync(getProjectPath('./index.html'), tpl);
   }
-  const htmlsPlugins = [];
+  const htmlPlugins = [];
 
   for (let dir of dirs) {
-    htmlsPlugins.push(
+    htmlPlugins.push(
       new HtmlWebpackPlugin(
         Object.assign(
           {
@@ -185,36 +188,41 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
     );
   }
 
-  return htmlsPlugins;
+  return htmlPlugins;
 };
 
-//#endregion
-
-//#region  config
-export const getConfig = (
-  isDev = true,
+/**
+ * Get a webpack configuration
+ * @param dev
+ * @param entry
+ * @param publicPath
+ * @param target
+ * @returns
+ */
+export const getWebpackConfig = (
+  dev = true,
   entry: {},
   publicPath = '/',
   target: 'node' | 'web' = 'web'
 ): Configuration => {
   const entryKeys = Object.keys(entry);
   const isNodeTarget = target === 'node';
-  const htmlsPlugins = isNodeTarget ? [] : getHtmlPluginsConfig(entryKeys, isDev);
+  const htmlPlugins = isNodeTarget ? [] : getHtmlPluginsConfig(entryKeys, dev);
   const name = entryKeys.join('-');
 
   const styleLoaders = !isNodeTarget
     ? [
         {
           test: /\.less$/,
-          use: getStyleLoaders('less', isDev),
+          use: getStyleLoaders('less', dev),
         },
         {
           test: /\.s[ac]ss$/i,
-          use: getStyleLoaders('sass', isDev),
+          use: getStyleLoaders('sass', dev),
         },
         {
           test: /\.css$/,
-          use: getStyleLoaders('css', isDev),
+          use: getStyleLoaders('css', dev),
         },
       ]
     : [
@@ -227,7 +235,7 @@ export const getConfig = (
   const plugins: Array<unknown> = [
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
-      __dev__: isDev,
+      __dev__: dev,
     }),
     new WebpackBar({ name: 'packw' }),
   ];
@@ -239,22 +247,22 @@ export const getConfig = (
         chunkFilename: `[name].[contenthash:6].css`,
       })
     );
-    plugins.push(...htmlsPlugins);
+    plugins.push(...htmlPlugins);
   }
 
   const config = {
-    mode: isDev ? 'development' : 'production',
-    bail: !isDev,
+    mode: dev ? 'development' : 'production',
+    bail: !dev,
     entry,
     output: {
       path: getProjectPath('./dist'),
       chunkFilename: `[name].[contenthash:6].js`,
-      filename: isDev ? '[name].js' : `[name].[contenthash:6].js`,
+      filename: dev ? '[name].js' : `[name].[contenthash:6].js`,
       publicPath,
     },
-    devtool: isDev ? 'cheap-module-source-map' : false,
+    devtool: dev ? 'cheap-module-source-map' : false,
     target,
-    cache: isDev
+    cache: dev
       ? {
           type: 'filesystem',
           name,
@@ -278,7 +286,7 @@ export const getConfig = (
           exclude: /node_modules/,
           use: {
             loader: require.resolve('babel-loader'),
-            options: getBabelOptions(isDev),
+            options: getBabelConfig(dev),
           },
         },
 
@@ -322,14 +330,14 @@ export const getConfig = (
         : {
             name: 'runtime',
           },
-      moduleIds: isDev ? 'named' : 'deterministic',
-      chunkIds: isDev ? 'named' : 'deterministic',
+      moduleIds: dev ? 'named' : 'deterministic',
+      chunkIds: dev ? 'named' : 'deterministic',
     },
     stats: 'errors-warnings',
     plugins,
   };
 
-  if (isDev) {
+  if (dev) {
     config.plugins.push(
       new ReactRefreshWebpackPlugin({
         overlay: false,
@@ -346,23 +354,26 @@ export const getConfig = (
   return config as Configuration;
 };
 
-//#endregion
-
-//#region run
+/**
+ * Run webpack on configuration
+ * @param config
+ * @param openFile
+ * @param dev
+ * @param devPort
+ * @param devServerConfig
+ * @param callback
+ */
 const runWebpack = (
   config: Configuration,
   openFile = 'index',
-  isDev: boolean,
+  dev: boolean,
   devPort?: number,
   devServerConfig?: WebpackDevServer.Configuration,
   callback?: () => void
 ) => {
-  let devServer;
-
-  if (isDev) {
+  if (dev) {
     const compiler = webpack(config);
     const serverConfig: WebpackDevServer.Configuration = {
-      publicPath: '/',
       compress: true,
       host: '0.0.0.0',
       disableHostCheck: true,
@@ -372,7 +383,7 @@ const runWebpack = (
       ...devServerConfig,
     };
     const port = serverConfig.port || devPort;
-    devServer = new WebpackDevServer(compiler as any, serverConfig);
+    const devServer = new WebpackDevServer(compiler, serverConfig);
 
     devServer.listen(port, serverConfig.host, (err) => {
       if (err) {
@@ -389,6 +400,15 @@ const runWebpack = (
       console.log();
       console.log('> Network:', chalk.green(`${serverUrlIp}`));
     });
+
+    ['SIGINT', 'SIGTERM'].forEach((sig) => {
+      process.on(sig, () => {
+        if (devServer) {
+          devServer.close();
+        }
+        process.exit();
+      });
+    });
   } else {
     const compiler = webpack(config);
 
@@ -398,70 +418,54 @@ const runWebpack = (
       }
 
       compiler.close(() => {
-        console.log(chalk.green('构建完成'));
+        console.log(chalk.green('successfully finished!'));
         callback?.();
       });
     });
   }
-
-  ['SIGINT', 'SIGTERM'].forEach((sig) => {
-    process.on(sig, () => {
-      if (devServer) {
-        devServer.close();
-      }
-      process.exit();
-    });
-  });
 };
-//#endregion
 
-//#region spa mode
-export const run = (dir = 'index', publicPath = '/', isDev = true, port = 9000) => {
+/**
+ * SPA build
+ * @param dir
+ * @param publicPath
+ * @param dev
+ * @param port
+ */
+export const run = (dir = 'index', publicPath = '/', dev = true, port = 9000) => {
   let s = glob.sync(`./src/${dir}/index{.jsx,.js,.ts,.tsx}`);
   let isDir = true;
   if (!s.length) {
     s = glob.sync(`./src/index{.jsx,.js,.ts,.tsx}`);
     if (!s.length) {
-      exit(`入口文件未找到 : ${getProjectPath('./src/index')}`);
+      exit(`Entry not found : ${getProjectPath('./src/index')}`);
     }
     isDir = false;
   }
   const entryFile = s[0];
 
-  const config = getConfig(isDev, { [dir]: entryFile }, publicPath);
+  const config = getWebpackConfig(dev, { [dir]: entryFile }, publicPath);
 
-  runWebpack(config, isDir ? dir : 'index', isDev, port);
+  runWebpack(config, isDir ? dir : 'index', dev, port);
 };
 
-//#endregion
-
-//#region mpa mode
-
 /**
- * node自定义构建
+ * Node build
  *
  * @export
- * @param {boolean} isDev 是否开发模式
+ * @param {boolean} dev 是否开发模式
  * @param {Configuration} config webpack Configuration配置
- * @param {() => void} [callback] 非开发模式编译完成的回调
- * @return {*}
+ * @param {() => void} callback 生产环境构建完成的回调
  */
-export default function pack(isDev: boolean, config: Configuration, callback?: () => void) {
-  const { entry, devServer = {}, ...others } = config as any;
-  if (typeof entry === 'object' && entry) {
+export default function pack(dev: boolean, config: Configuration, callback?: () => void) {
+  const { entry, devServer = {}, ...others } = config;
+
+  if (typeof entry === 'object' && entry && Object.keys(entry).length) {
     const keys = Object.keys(entry);
-
-    if (keys.length) {
-      const _config = getConfig(isDev, entry);
-      const mergedConfig = merge({}, _config, others);
-
-      return runWebpack(mergedConfig, keys[0], isDev, 9000, devServer, callback);
-    } else {
-      exit('请配置entry');
-    }
+    const config = getWebpackConfig(dev, entry);
+    const finalConfig = merge({}, config, others);
+    return runWebpack(finalConfig, keys[0], dev, 9000, devServer, callback);
   } else {
-    exit('请配置entry');
+    exit('Entry not found');
   }
 }
-
-//#endregion
