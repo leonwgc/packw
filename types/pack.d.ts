@@ -1,6 +1,16 @@
-import { Configuration } from 'webpack';
+import webpack, { Configuration, RuleSetRule } from 'webpack';
 export { getSsrLib } from './lib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
+type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
+type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
+/**
+ * Get style loaders use setting
+ * @param type
+ * @param dev
+ * @param custFun
+ * @returns
+ */
+export declare const getStyleLoaderUse: (type: CssHandleType, dev: boolean, custFun?: CssHandleCustFun) => webpack.RuleSetRule[];
 /**
  * Get a webpack configuration
  * @param dev

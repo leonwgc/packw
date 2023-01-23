@@ -11,7 +11,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import WebpackBar from 'webpackbar';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import WebpackDevServer from 'webpack-dev-server';
-import webpack, { Configuration } from 'webpack';
+import webpack, { Configuration, RuleSetRule } from 'webpack';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import address from 'address';
@@ -28,14 +28,23 @@ function exit(error) {
   process.exit(9);
 }
 
+type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
+
+type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
+
 /**
- * Get style loaders config
- * @param type less/sass/css
+ * Get style loaders use setting
+ * @param type
  * @param dev
+ * @param custFun
  * @returns
  */
-const getStyleLoaders = (type = 'less', dev: boolean) => {
-  const loaders: any[] = [
+export const getStyleLoaderUse = (
+  type: CssHandleType = 'less',
+  dev: boolean,
+  custFun?: CssHandleCustFun
+) => {
+  let rules: RuleSetRule[] = [
     {
       loader: require.resolve('css-loader'),
       options: {
@@ -62,7 +71,7 @@ const getStyleLoaders = (type = 'less', dev: boolean) => {
 
   switch (type) {
     case 'less': {
-      loaders.push({
+      rules.push({
         loader: require.resolve('less-loader'),
         options: {
           lessOptions: {
@@ -75,7 +84,7 @@ const getStyleLoaders = (type = 'less', dev: boolean) => {
       break;
     }
     case 'sass': {
-      loaders.push({
+      rules.push({
         loader: require.resolve('sass-loader'),
         options: {
           sourceMap: dev,
@@ -83,17 +92,26 @@ const getStyleLoaders = (type = 'less', dev: boolean) => {
       });
       break;
     }
+    case 'custom': {
+      if (typeof custFun === 'function') {
+        const rule = custFun();
+        if (rule) {
+          rules = rules.concat(rule);
+        }
+      }
+      break;
+    }
   }
 
   if (dev) {
-    loaders.unshift({ loader: require.resolve('style-loader') });
+    rules.unshift({ loader: require.resolve('style-loader') });
   } else {
-    loaders.unshift({
+    rules.unshift({
       loader: MiniCssExtractPlugin.loader,
     });
   }
 
-  return loaders;
+  return rules;
 };
 
 /**
@@ -215,15 +233,15 @@ export const getWebpackConfig = (
     ? [
         {
           test: /\.less$/,
-          use: getStyleLoaders('less', dev),
+          use: getStyleLoaderUse('less', dev),
         },
         {
           test: /\.s[ac]ss$/i,
-          use: getStyleLoaders('sass', dev),
+          use: getStyleLoaderUse('sass', dev),
         },
         {
           test: /\.css$/,
-          use: getStyleLoaders('css', dev),
+          use: getStyleLoaderUse('css', dev),
         },
       ]
     : [
