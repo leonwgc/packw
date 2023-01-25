@@ -1,8 +1,8 @@
 import webpack, { Configuration, RuleSetRule } from 'webpack';
-export { getSsrLib } from './lib';
+export { getNodeLib, injectHtml } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
-type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
-type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
+declare type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
+declare type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
 /**
  * Get style loaders use setting
  * @param type
@@ -19,9 +19,9 @@ export declare const getStyleLoaderUse: (type: CssHandleType, dev: boolean, cust
  * @param target
  * @returns
  */
-export declare const getWebpackConfig: (dev: boolean, entry: {}, publicPath?: string, target?: 'node' | 'web') => Configuration;
+export declare const getWebpackConfig: (dev?: boolean, entry?: Record<string, string>, publicPath?: string, target?: 'node' | 'web') => Configuration;
 /**
- * SPA build
+ * SPA build, used for cli build
  * @param dir
  * @param publicPath
  * @param dev
@@ -32,8 +32,8 @@ export declare const run: (dir?: string, publicPath?: string, dev?: boolean, por
  * Node build
  *
  * @export
- * @param {boolean} dev 是否开发模式
- * @param {Configuration} config webpack Configuration配置
- * @param {() => void} callback 生产环境构建完成的回调
+ * @param {boolean} dev Build for dev?
+ * @param {Configuration} config Webpack configuration object
+ * @param {() => void} callback Be invoked after production build successfully
  */
 export default function pack(dev: boolean, config: Configuration, callback?: () => void): void;

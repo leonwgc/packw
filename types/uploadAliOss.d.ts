@@ -1,4 +1,4 @@
-type AliOSSConfig = {
+declare type AliOSSConfig = {
     region: string;
     accessKeyId: string;
     accessKeySecret: string;

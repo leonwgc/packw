@@ -16,8 +16,10 @@ import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import address from 'address';
 import tpl from './tpl';
-export { getSsrLib } from './lib';
+export { getNodeLib, injectHtml } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
+
+const defaultDevPort = 9000;
 
 const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
@@ -220,7 +222,7 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
  */
 export const getWebpackConfig = (
   dev = true,
-  entry: {},
+  entry: Record<string, string> = {},
   publicPath = '/',
   target: 'node' | 'web' = 'web'
 ): Configuration => {
@@ -281,7 +283,9 @@ export const getWebpackConfig = (
     },
     devtool: dev ? 'cheap-module-source-map' : false,
     target,
-    cache: dev
+    cache: isNodeTarget
+      ? false
+      : dev
       ? {
           type: 'filesystem',
           name,
@@ -376,8 +380,8 @@ export const getWebpackConfig = (
 /**
  * Run webpack on configuration
  * @param config
- * @param openFile
- * @param dev
+ * @param openFile default index, open index.html by default.
+ * @param dev boolean, whether run in dev mode
  * @param devPort
  * @param devServerConfig
  * @param callback
@@ -445,13 +449,13 @@ const runWebpack = (
 };
 
 /**
- * SPA build
+ * SPA build, used for cli build
  * @param dir
  * @param publicPath
  * @param dev
  * @param port
  */
-export const run = (dir = 'index', publicPath = '/', dev = true, port = 9000) => {
+export const run = (dir = 'index', publicPath = '/', dev = true, port = defaultDevPort) => {
   let s = glob.sync(`./src/${dir}/index{.jsx,.js,.ts,.tsx}`);
   let isDir = true;
   if (!s.length) {
@@ -472,18 +476,18 @@ export const run = (dir = 'index', publicPath = '/', dev = true, port = 9000) =>
  * Node build
  *
  * @export
- * @param {boolean} dev 是否开发模式
- * @param {Configuration} config webpack Configuration配置
- * @param {() => void} callback 生产环境构建完成的回调
+ * @param {boolean} dev Build for dev?
+ * @param {Configuration} config Webpack configuration object
+ * @param {() => void} callback Be invoked after production build successfully
  */
 export default function pack(dev: boolean, config: Configuration, callback?: () => void) {
   const { entry, devServer = {}, ...others } = config;
 
   if (typeof entry === 'object' && entry && Object.keys(entry).length) {
     const keys = Object.keys(entry);
-    const config = getWebpackConfig(dev, entry);
+    const config = getWebpackConfig(dev, entry as Record<string, string>);
     const finalConfig = merge({}, config, others);
-    return runWebpack(finalConfig, keys[0], dev, 9000, devServer, callback);
+    return runWebpack(finalConfig, keys[0], dev, defaultDevPort, devServer, callback);
   } else {
     exit('Entry not found');
   }
