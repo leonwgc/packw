@@ -12,7 +12,7 @@ export default `
     <meta name="apple-touch-fullscreen" content="yes" />
     <title></title>
   </head>
-  <body style="font-size: 14px">
+  <body>
     <div id="root"></div>
   </body>
 </html>`;

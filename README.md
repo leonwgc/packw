@@ -1,6 +1,6 @@
 ### packw
 
-webpack5 打包构建, 支持cli & node调用, demo参考 
+Webpack5 react 打包构建,支持mpa,spa应用, 支持cli & node使用, demo参考 
 [https://github.com/leonwgc/packw-demo](https://github.com/leonwgc/packw-demo)
 
 
