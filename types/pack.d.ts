@@ -1,8 +1,8 @@
 import webpack, { Configuration, RuleSetRule } from 'webpack';
 export { getNodeLib, injectHtml } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
-type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
-type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
+declare type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
+declare type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;
 /**
  * Get style loaders use setting
  * @param type

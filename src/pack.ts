@@ -174,9 +174,11 @@ const getAssetConfig = (type: string) => {
  */
 const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
   // Check & emit index.html in project root
-  if (!fs.existsSync(getProjectPath('./index.html'))) {
+  let hasTempalteFunc = fs.existsSync(getProjectPath('./index.tpl.js'));
+  if (!hasTempalteFunc && !fs.existsSync(getProjectPath('./index.html'))) {
     fs.writeFileSync(getProjectPath('./index.html'), tpl);
   }
+
   const htmlPlugins = [];
 
   for (let dir of dirs) {
@@ -185,7 +187,11 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
         Object.assign(
           {
             filename: `${dir}.html`,
-            template: getProjectPath('index.html'),
+            [hasTempalteFunc && !isDev ? 'templateContent' : 'template']:
+              hasTempalteFunc && !isDev
+                ? ({ htmlWebpackPlugin }) =>
+                    require(getProjectPath('./index.tpl.js'))(htmlWebpackPlugin)
+                : getProjectPath('index.html'),
             chunks: [dir, 'vendor', 'common', 'runtime'],
           },
           !isDev
