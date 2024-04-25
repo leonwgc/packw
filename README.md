@@ -85,25 +85,24 @@ module.exports = function (htmlWebpackPlugin) {
   const body = renderer?.();
 
   return `
-        <!doctype html>
-        <html lang="zh-cn">
-        <head>
-	        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-          <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
-	        <meta name="format-detection" content="telephone=no, email=no"><meta name="apple-mobile-web-app-capable" content="yes">
-	        <meta name="apple-touch-fullscreen" content="yes">
-	        ${htmlWebpackPlugin.tags.headTags}
-          <link rel="shortcut icon"/>
-	        <title>w-popover demo</title>
-        </head>
-        <body>
-	        <div id='root'>${body}</div>
-		      ${htmlWebpackPlugin.tags.bodyTags}
-		  </body>
-      </html>
- `;
+    <!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    ${htmlWebpackPlugin.tags.headTags}
+    <link rel="shortcut icon" />
+    <title>w-popover demo</title>
+  </head>
+  <body>
+    <div id="root">${body}</div>
+    ${htmlWebpackPlugin.tags.bodyTags}
+  </body>
+</html>
+  `;
 };
-
 ```
 
 4. The combined commands for prerendering
@@ -114,7 +113,7 @@ node pack.ssr && node pack --build
 
 5. SSR with expressjs
 
- just like prerender, except for that we run the ssr function for each request. below is an example with express.js
+just like prerender, except for that we run the ssr function for each request. below is an example with express.js
 
 ```js
 const express = require('express');
