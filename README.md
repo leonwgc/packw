@@ -1,108 +1,130 @@
-### packw
+### Features
 
-Webpack5 react 打包构建,支持mpa,spa应用, 支持cli & node使用, demo参考 
-[https://github.com/leonwgc/packw-demo](https://github.com/leonwgc/packw-demo)
+1. Zero / Minimal Webpack5 configration.
+2. Out of box for react project.
+3. Support CSR, SSR build
+4. CLI and Nodejs interface.
 
+### Usage
 
-##### cli开发 cli start dev server 
+Let's take my another open source project [w-popover](https://github.com/leonwgc/w-popover) for example.
 
-> npx packw start
+#### For DEV and CSR build.
 
-#### cli构建 cli build 
-
-> npx packw build
-
-### node调用 node usage
+1. dev command: node pack
+2. build command: node pack --build
 
 ```js
-const { default: packw } = require('packw');
+/* filename: pack.js */
+const { default: pack } = require('packw');
 const argv = require('yargs').argv;
-const chalk = require('chalk');
 const path = require('path');
 
-const isDev = !!argv.dev;
+const isBuild = !!argv.build;
 
-packw(
-  isDev,
-  {
-    entry: {
-      index: `./src/index`,
-    },
-    devServer: {
-      port: 3000,
-      historyApiFallback: true,
-    },
-    output: {
-      path: path.resolve(__dirname, './dist'),
+pack(!isBuild, {
+  entry: {
+    index: `./demo/index`,
+  },
+  output: {
+    path: path.resolve(__dirname, !isBuild ? '.dev' : 'docs'),
+    publicPath: '',
+  },
+  devServer: {
+    port: 9101,
+  },
+  resolve: {
+    alias: {
+      'w-popover': path.resolve(__dirname, './src'),
     },
   },
-  () => {
-    console.log(chalk.green('done'));
-  },
-);
-
+});
 ```
 
-### ssr 服务端渲染
+#### For SSR and Prerender
 
-> node pack.ssr.client && node pack.ssr.js && node app.js
-
-#### ssr 构建流程
-
-1. node端构建commonjs库, 放在ssr-lib目录,调用ReactDOMServer.renderToString 渲染html
-
-> node打包命令:` node pack.ssr.js`
-
-> 构建入口 /src/index.ssr.jsx 
+1. Add a server side rendering entry.
 
 ```js
+/* filename: index.ssr.jsx  */
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { Provider, configureStore } from 'simple-redux-store';
+import { renderToString } from 'react-dom/server';
 import App from './App';
 
-export const indexRender = (location, context) => {
-  const store = configureStore({ name: 'server' });
-  return ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <App location={location} context={context} />
-    </Provider>,
-  );
+export default function () {
+  return renderToString(<App />);
+}
+```
+
+2. Add nodejs to generate a commonjs library to run above SSR function.
+
+```js
+// filename: pack.ssr.js
+const { getNodeLib } = require('packw');
+const chalk = require('chalk');
+
+getNodeLib({ index: './demo/index.ssr.jsx' }, () => {
+  console.log(chalk.greenBright('ssr library generated!'));
+});
+```
+
+3. For Prerendering, please configuare the html template. Thus we can use templateContent function to dynamically inject the prerendered html content.
+
+```js
+// filename: index.tpl.js in root directory.
+const path = require('path');
+const fs = require('fs');
+const ssrLibDir = 'ssr-lib';
+
+module.exports = function (htmlWebpackPlugin) {
+  let renderer = {};
+
+  if (fs.existsSync(path.resolve(`./${ssrLibDir}/index.js`))) {
+    renderer = require(`./${ssrLibDir}/index.js`).default;
+  }
+
+  let body = '';
+  if (typeof renderer === 'function') {
+    body = renderer?.();
+  }
+
+  return `
+ <!doctype html>
+ <html lang="zh-cn">
+ <head>
+	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+	 <meta name="format-detection" content="telephone=no, email=no"><meta name="apple-mobile-web-app-capable" content="yes">
+	 <meta name="apple-touch-fullscreen" content="yes">
+	 ${htmlWebpackPlugin.tags.headTags}
+   <link rel="shortcut icon"/>
+	 <title>w-popover demo</title>
+ </head>
+ <body>
+	 <div id='root'>${body}</div>
+	 <script>window.app ={};</script>
+		 ${htmlWebpackPlugin.tags.bodyTags}
+		 </body>
+ </html>
+ `;
 };
-
 ```
 
-2.  web端打包, 执行ReactDOM.hydrate , 打包结果放在dist目录,此时已经构建好css和js bundles , html内容等待node调用ejs注入（埋了一个注入点<?-html?>）
-
-> 打包命令: node pack.ssr.client.js
-
-> 打包入口 /src/index.jsx 
-
-```js
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider, configureStore } from 'simple-redux-store';
-import App from './App';
-
-const store = configureStore({ name: 'client' }, __dev__);
-
-ReactDOM.hydrate(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root'),
-);
+4. The combined commands for prerendering
 
 ```
+node pack.ssr && node pack --build
+```
 
-3. 启动node服务，接受请求，调用node打包的commonjs渲染html,然后通过ejs注入到模板文件并发送给浏览器
-    
+5. SSR with expressjs
+
+ just like prerender, except for that we run the ssr function for each request. below is an example with express.js
 
 ```js
 const express = require('express');
 const app = express();
 const path = require('path');
-const ssrRenderer = require('./ssr-lib/index'); // pack.ssr.js 构建的commonjs模块， 导出了一个对象
+const ssrRenderer = require('./ssr-lib/index'); 
 app.disable('x-powered-by');
 app.enable('trust proxy');
 
@@ -125,7 +147,7 @@ app.use((req, res, next) => {
         throw err;
       }
       res.send(str);
-    },
+    }
   );
 });
 
@@ -139,5 +161,4 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.info(`==> 🍺  Express server running at localhost: ${PORT}`);
 });
-
 ```
