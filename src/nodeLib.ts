@@ -9,12 +9,12 @@ import cheerio from 'cheerio';
 import merge from 'webpack-merge';
 import { exit } from 'process';
 
-const getProjectPath = (dir = './') => {
+export const getProjectPath = (dir = './') => {
   return path.join(process.cwd(), dir);
 };
 
 /**
- * Build commonjs for node rendering.
+ * Build commonjs file for node rendering.
  * @param entry webpack entry
  * @param output output folder , default ./ssr-lib
  * @param callback after build , callback will be invoked.

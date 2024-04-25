@@ -1,5 +1,5 @@
 import webpack, { Configuration, RuleSetRule } from 'webpack';
-export { getNodeLib, injectHtml } from './nodeLib';
+export { getNodeLib, injectHtml, getProjectPath } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
 declare type CssHandleType = 'less' | 'sass' | 'css' | 'custom';
 declare type CssHandleCustFun = () => RuleSetRule | RuleSetRule[] | null;

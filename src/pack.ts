@@ -16,7 +16,7 @@ import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import address from 'address';
 import tpl from './tpl';
-export { getNodeLib, injectHtml } from './nodeLib';
+export { getNodeLib, injectHtml, getProjectPath } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
 
 const defaultDevPort = 9000;

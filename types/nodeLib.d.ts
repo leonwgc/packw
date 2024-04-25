@@ -1,5 +1,6 @@
+export declare const getProjectPath: (dir?: string) => string;
 /**
- * Build commonjs for node rendering.
+ * Build commonjs file for node rendering.
  * @param entry webpack entry
  * @param output output folder , default ./ssr-lib
  * @param callback after build , callback will be invoked.

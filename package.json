@@ -1,7 +1,7 @@
 {
   "name": "packw",
-  "version": "2.0.0",
-  "description": "Webpack5 with out-of-the-box experience for react devs",
+  "version": "2.1.0",
+  "description": "Webpack5 out-of-the-box experience for react dev",
   "bin": {
     "packw": "./bin/cli.js"
   },
