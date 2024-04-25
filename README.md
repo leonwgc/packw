@@ -86,21 +86,21 @@ module.exports = function (htmlWebpackPlugin) {
 
   return `
     <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="format-detection" content="telephone=no, email=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    ${htmlWebpackPlugin.tags.headTags}
-    <link rel="shortcut icon" />
-    <title>w-popover demo</title>
-  </head>
-  <body>
-    <div id="root">${body}</div>
-    ${htmlWebpackPlugin.tags.bodyTags}
-  </body>
-</html>
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="format-detection" content="telephone=no, email=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        ${htmlWebpackPlugin.tags.headTags}
+        <link rel="shortcut icon" />
+        <title>w-popover demo</title>
+      </head>
+      <body>
+        <div id="root">${body}</div>
+        ${htmlWebpackPlugin.tags.bodyTags}
+      </body>
+    </html>
   `;
 };
 ```
