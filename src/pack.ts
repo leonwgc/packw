@@ -18,6 +18,7 @@ import address from 'address';
 import tpl from './tpl';
 export { getNodeLib, injectHtml, getProjectPath } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
+import * as packageConfig from '../package.json';
 
 const defaultDevPort = 9000;
 
@@ -264,7 +265,7 @@ export const getWebpackConfig = (
     new webpack.DefinePlugin({
       __dev__: dev,
     }),
-    new WebpackBar({ name: 'packw' }),
+    new WebpackBar({ name: 'packw:' + packageConfig.version }),
   ];
 
   if (!isNodeTarget) {
