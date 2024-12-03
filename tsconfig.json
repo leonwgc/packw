@@ -20,8 +20,8 @@
     "allowJs": true,
     "strictNullChecks": false,
     "removeComments": false,
-    "outDir": "types",
-    "lib": ["es2015", "dom", "es2015.promise"]
+    "lib": ["es2015", "dom", "es2015.promise"],
+    "declarationDir": "types"
   },
   "include": ["src/**/*"],
   "exclude": ["lib", "node_modules"]

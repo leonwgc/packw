@@ -4,7 +4,7 @@ type AliOSSConfig = {
     accessKeySecret: string;
     bucket: string;
 };
-declare const uploadAliOss: (config: AliOSSConfig, ossFolder: string, env: 'prd' | 'test') => Promise<void>;
+declare const uploadAliOss: (config: AliOSSConfig, ossFolder: string, env: "prd" | "test") => Promise<void>;
 /**
  * encrypt a key
  * @param src
