@@ -416,6 +416,7 @@ const runWebpack = (
       ...devServerConfig,
     };
     const port = serverConfig.port || devPort;
+    // dont upgrade dev server to 5.x.
     const devServer = new WebpackDevServer(compiler, serverConfig);
 
     devServer.listen(port, serverConfig.host, (err) => {
@@ -427,7 +428,7 @@ const runWebpack = (
       const serverUrlIp = `http://${ip()}:${port}/${page}`;
 
       console.log();
-      console.log(chalk.cyan('dev server running at:'));
+      console.log(chalk.cyan('dev server is up'));
       console.log();
       console.log('> Local:', chalk.green(`${serveUrl}`));
       console.log();
