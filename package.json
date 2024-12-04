@@ -82,12 +82,12 @@
     "sass": "^1.82.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.4",
-    "typescript": "^4.9.5",
+    "typescript": "^5.7.2",
     "webpack": "^5.97.0",
     "webpack-dev-server": "^3.11.3",
     "webpack-merge": "^5.10.0",
     "webpack-node-externals": "^3.0.0",
-    "webpackbar": "^5.0.2",
+    "webpackbar": "^7.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
