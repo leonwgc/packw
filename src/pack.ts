@@ -14,7 +14,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import webpack, { Configuration, RuleSetRule } from 'webpack';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import address from 'address';
+import { ip } from 'address';
 import tpl from './tpl';
 export { getNodeLib, injectHtml, getProjectPath } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
@@ -424,7 +424,7 @@ const runWebpack = (
       }
       const page = `${openFile === 'index' ? '' : openFile + '.html'}`;
       const serveUrl = `http://localhost:${port}/${page}`;
-      const serverUrlIp = `http://${address.ip()}:${port}/${page}`;
+      const serverUrlIp = `http://${ip()}:${port}/${page}`;
 
       console.log();
       console.log(chalk.cyan('dev server running at:'));
@@ -451,7 +451,7 @@ const runWebpack = (
       }
 
       compiler.close(() => {
-        console.log(chalk.green('successfully finished!'));
+        console.log(chalk.green('done 🍺 '));
         callback?.();
       });
     });
