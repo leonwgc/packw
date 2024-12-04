@@ -1,6 +1,6 @@
 {
   "name": "packw",
-  "version": "2.3.2-alpha",
+  "version": "2.3.2",
   "description": "Webpack5 out-of-the-box dx for react project.",
   "bin": {
     "packw": "./bin/cli.js"

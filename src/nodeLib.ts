@@ -53,7 +53,7 @@ export const getNodeLib = (
     }
 
     compiler.close(() => {
-      console.log(chalk.green('successfully build!'));
+      console.log(chalk.green('library done 🍺 '));
       callback?.();
     });
   });
