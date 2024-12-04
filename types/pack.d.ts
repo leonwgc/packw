@@ -19,7 +19,7 @@ export declare const getStyleLoaderUse: (type: CssHandleType, dev: boolean, cust
  * @param target
  * @returns
  */
-export declare const getWebpackConfig: (dev?: boolean, entry?: Record<string, string>, publicPath?: string, target?: "node" | "web") => Configuration;
+export declare const getWebpackConfig: (dev?: boolean, entry?: Record<string, string>, publicPath?: string, target?: 'node' | 'web') => Configuration;
 /**
  * SPA build, used for cli build
  * @param dir
