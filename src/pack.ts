@@ -139,9 +139,7 @@ const getBabelConfig = (dev: boolean) => {
         //include the transformations and polyfills for the features that we use and that are missing in our target browsers.
         require.resolve('@babel/preset-env'),
         {
-          corejs: { version: '3.39', proposals: true },
           modules: 'auto', // Setting this to false will preserve ES modules. Use this only if you intend to ship native ES Modules to browsers. If you are using a bundler with Babel, the default modules: "auto" is always preferred.
-          useBuiltIns: 'usage', // Babel will now inspect all your code for features that are missing in your target environments and include only the required polyfills
         },
       ],
       require.resolve('@babel/preset-react'),
