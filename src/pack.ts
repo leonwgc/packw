@@ -142,7 +142,7 @@ const getBabelConfig = (dev: boolean) => {
           modules: 'auto', // Setting this to false will preserve ES modules. Use this only if you intend to ship native ES Modules to browsers. If you are using a bundler with Babel, the default modules: "auto" is always preferred.
         },
       ],
-      require.resolve('@babel/preset-react'),
+      [require.resolve('@babel/preset-react'), { runtime: 'automatic' }],
       require.resolve('@babel/preset-typescript'),
     ],
     plugins: plugins,
