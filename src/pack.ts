@@ -18,7 +18,6 @@ import { ip } from 'address';
 import tpl from './tpl';
 export { getNodeLib, injectHtml, getProjectPath } from './nodeLib';
 export { encryptKey, decryptSignedKey, default as uploadAliOss } from './uploadAliOss';
-import * as packageConfig from '../package.json';
 
 const defaultDevPort = 9000;
 
@@ -226,13 +225,15 @@ const getHtmlPluginsConfig = (dirs: string[] = [], isDev: boolean) => {
  * @param entry
  * @param publicPath
  * @param target
+ * @param banner
  * @returns
  */
 export const getWebpackConfig = (
   dev = true,
   entry: Record<string, string> = {},
   publicPath = '/',
-  target: 'node' | 'web' = 'web'
+  target: 'node' | 'web' = 'web',
+  banner?: string
 ): Configuration => {
   const entryKeys = Object.keys(entry);
   const isNodeTarget = target === 'node';
@@ -266,8 +267,11 @@ export const getWebpackConfig = (
     new webpack.DefinePlugin({
       __dev__: dev,
     }),
-    new WebpackBar({ name: 'packw:' + packageConfig.version }),
   ];
+
+  if (typeof banner === 'string' && banner.trim()) {
+    plugins.push(new WebpackBar({ name: banner }));
+  }
 
   if (!isNodeTarget) {
     plugins.push(
@@ -425,8 +429,7 @@ const runWebpack = (
       const serveUrl = `http://localhost:${port}/${page}`;
       const serverUrlIp = `http://${ip()}:${port}/${page}`;
 
-      console.log();
-      console.log(chalk.cyan('dev server is up'));
+      console.log(chalk.cyan('dev server is listening at'));
       console.log();
       console.log('> Local:', chalk.green(`${serveUrl}`));
       console.log();
@@ -485,16 +488,22 @@ export const run = (dir = 'index', publicPath = '/', dev = true, port = defaultD
  * Node build
  *
  * @export
- * @param {boolean} dev Build for dev?
- * @param {Configuration} config Webpack configuration object
- * @param {() => void} callback Be invoked after production build successfully
+ * @param {boolean} dev whether run in dev mode
+ * @param {Configuration} config Webpack configuration
+ * @param {() => void} callback callback after production build finished.
+ * @param {string} banner banner text
  */
-export default function pack(dev: boolean, config: Configuration, callback?: () => void) {
+export default function pack(
+  dev: boolean,
+  config: Configuration,
+  callback?: () => void,
+  banner?: string
+) {
   const { entry, devServer = {}, ...others } = config;
 
   if (typeof entry === 'object' && entry && Object.keys(entry).length) {
     const keys = Object.keys(entry);
-    const config = getWebpackConfig(dev, entry as Record<string, string>);
+    const config = getWebpackConfig(dev, entry as Record<string, string>, '/', 'web', banner);
     const finalConfig = merge({}, config, others);
     return runWebpack(finalConfig, keys[0], dev, defaultDevPort, devServer, callback);
   } else {

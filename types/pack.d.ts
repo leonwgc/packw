@@ -17,9 +17,10 @@ export declare const getStyleLoaderUse: (type: CssHandleType, dev: boolean, cust
  * @param entry
  * @param publicPath
  * @param target
+ * @param banner
  * @returns
  */
-export declare const getWebpackConfig: (dev?: boolean, entry?: Record<string, string>, publicPath?: string, target?: "node" | "web") => Configuration;
+export declare const getWebpackConfig: (dev?: boolean, entry?: Record<string, string>, publicPath?: string, target?: "node" | "web", banner?: string) => Configuration;
 /**
  * SPA build, used for cli build
  * @param dir
@@ -32,8 +33,9 @@ export declare const run: (dir?: string, publicPath?: string, dev?: boolean, por
  * Node build
  *
  * @export
- * @param {boolean} dev Build for dev?
- * @param {Configuration} config Webpack configuration object
- * @param {() => void} callback Be invoked after production build successfully
+ * @param {boolean} dev whether run in dev mode
+ * @param {Configuration} config Webpack configuration
+ * @param {() => void} callback callback after production build finished.
+ * @param {string} banner banner text
  */
-export default function pack(dev: boolean, config: Configuration, callback?: () => void): void;
+export default function pack(dev: boolean, config: Configuration, callback?: () => void, banner?: string): void;
