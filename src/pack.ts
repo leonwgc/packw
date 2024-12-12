@@ -316,12 +316,62 @@ export const getWebpackConfig = (
         },
     module: {
       rules: [
+        // {
+        //   test: /\.[j|t]sx?$/,
+        //   exclude: /node_modules/,
+        //   use: {
+        //     loader: require.resolve('babel-loader'),
+        //     options: getBabelConfig(dev),
+        //   },
+        // },
         {
-          test: /\.[j|t]sx?$/,
+          test: /\.[mj|j]sx?$/,
           exclude: /node_modules/,
           use: {
-            loader: require.resolve('babel-loader'),
-            options: getBabelConfig(dev),
+            loader: require.resolve('swc-loader'),
+            options: {
+              jsc: {
+                parser: {
+                  syntax: 'ecmascript',
+                  jsx: true,
+                  decorators: true,
+                  dynamicImport: true,
+                },
+                transform: {
+                  react: {
+                    refresh: true,
+                  },
+                },
+                experimental: {
+                  cacheRoot: 'node_modules/.cache/swc',
+                },
+              },
+            },
+          },
+        },
+        {
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: require.resolve('swc-loader'),
+            options: {
+              jsc: {
+                parser: {
+                  syntax: 'typescript',
+                  tsx: true,
+                  dynamicImport: true,
+                  decorators: true,
+                },
+                transform: {
+                  react: {
+                    refresh: true,
+                  },
+                },
+                experimental: {
+                  cacheRoot: 'node_modules/.cache/swc',
+                },
+              },
+            },
           },
         },
 
