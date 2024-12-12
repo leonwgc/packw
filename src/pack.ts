@@ -415,6 +415,9 @@ const runWebpack = (
       hot: true,
       inline: true,
       noInfo: true,
+      // If you also use a browser through some redirection (proxy, ssh redirect, …), use the devServer option sockPort: 'location',
+      // so the socket port will use the same as the location port, which is usually enough
+      sockPort: 'location',
       ...devServerConfig,
     };
     const port = serverConfig.port || devPort;
