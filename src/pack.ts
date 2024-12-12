@@ -506,7 +506,13 @@ export default function pack(
 
   if (typeof entry === 'object' && entry && Object.keys(entry).length) {
     const keys = Object.keys(entry);
-    const config = getWebpackConfig(dev, entry as Record<string, string>, '/', 'web', banner);
+    const config = getWebpackConfig(
+      dev,
+      entry as Record<string, string>,
+      '/',
+      'web',
+      banner || 'app'
+    );
     const finalConfig = merge({}, config, others);
     return runWebpack(finalConfig, keys[0], dev, defaultDevPort, devServer, callback);
   } else {
