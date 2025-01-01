@@ -6,7 +6,7 @@ export default defineConfig({
   sourcemap: false,
   clean: true,
   outDir: 'lib',
-  minify: false,
+  minify: true,
   target: 'node20',
   format: 'cjs',
   external: ['./ignore'],
