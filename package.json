@@ -1,6 +1,6 @@
 {
   "name": "packw",
-  "version": "2.3.7",
+  "version": "2.4.0",
   "description": "Webpack5 out-of-the-box dx for react project.",
   "bin": {
     "packw": "./bin/cli.js"
@@ -29,12 +29,12 @@
     "@babel/core": "^7.26.0",
     "@babel/eslint-parser": "^7.25.9",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-transform-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.17.2",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/plugin-proposal-decorators": "^7.17.2",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-transform-optional-chaining": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
     "@babel/preset-typescript": "^7.26.0",
@@ -84,7 +84,8 @@
     "@types/node": "^16.18.96",
     "@types/webpack-dev-server": "^3.11.6",
     "babel-preset-minify": "^0.5.2",
-    "father-build": "^1.22.5"
+    "father-build": "^1.22.5",
+    "tsup": "^8.3.5"
   },
   "files": [
     "lib",

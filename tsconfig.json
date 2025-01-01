@@ -10,7 +10,6 @@
     "module": "commonjs",
     "sourceMap": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
